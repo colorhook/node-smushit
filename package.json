@@ -1,0 +1,24 @@
+{
+  "name": "node-smushit",
+  "version": "0.1.0",
+  "author": "colorhook <colorhook@gmail.com>",
+	
+  "repository": {
+	"type": "git",
+	"url": "http://github.com/colorhook/node-smushit"
+  },
+  "dependencies": {
+	"optimist": ">= 0.2.6"
+  },
+  "keywords": ["image", "compressor", "compression"],
+  "directories" : { "lib" : "./lib" },
+  "bin" : { "smushit" : "./cli.js" },
+  "main" : "smushit",
+  "engines": { "node": ">= 0.6.7" },
+  "licenses": [
+	{
+		"type": "BSD",
+		"url": "LICENSE"
+	}
+  ]
+}
