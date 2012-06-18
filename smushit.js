@@ -109,7 +109,7 @@ exports.smushit = function(inputs, settings){
 	if(files.length == 0){
 		log("please specify image(s) need to smushit!");
 		if(settings.onComplete){
-			settings.onComplete(null, reports);
+			settings.onComplete(reports);
 		}
 		return;
 	};
