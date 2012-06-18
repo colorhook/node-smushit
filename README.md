@@ -9,7 +9,20 @@ How to use?
 install by NPM
 
 ```shell
-npm install node-smushit
+npm install node-smushit -g
+```
+
+use smushit in shell
+
+```shell
+//view help
+smushit -h
+
+//smash files or directory
+smushit file1 file2 file3
+
+//with recursive
+smushit file1 file2 file3 -R
 ```
 
 use it in node
@@ -27,19 +40,21 @@ smushit.smushit('images-folder-path');
 
 //smash images in directory or the child-directories with recursive
 smushit.smushit('images-folder-path', {recursive: true});
+
+//smash images and register callbacks
+smushit.smushit('images-folder-path', {
+    onItemStart: function(item){
+	
+    },
+    onItemComplete: function(e, item, response){
+	
+    },
+    onComplete: function(reports){
+	
+    }
+});
 ```
 
-use smushit in shell
 
-```shell
-//view help
-smushit -h
-
-//smash files or directory
-smushit file1 file2 file3
-
-//with recursive
-smushit file1 file2 file3 -R
-```
 
 

@@ -6,7 +6,7 @@ var smushit = require('./lib/smushit')
   , FileUtil = require('./lib/FileUtil.js');
 
 
-var saveBinary = function(binaryUrl, path, success, fail){
+var saveBinary = function(binaryUrl, path, callback){
 	var urlObj = url.parse(binaryUrl),
 		options = {
 			host: urlObj.host
@@ -21,20 +21,15 @@ var saveBinary = function(binaryUrl, path, success, fail){
 			data += chunk;
 		})
 		res.on('end', function(){
-			fs.writeFile(path, data, 'binary', function(err){
-				if (err){
-					fail && fail();
-				}else{
-					success && success();
-				}
-			})
+			fs.writeFile(path, data, 'binary', callback)
 		})
 	});
 	
-	if(fail){
-		request.on("error", fail);
+	if(callback){
+		request.on("error", callback);
 	}
 };
+
 
 exports.smushit = function(inputs, settings){
 	var defaults = {
@@ -60,8 +55,6 @@ exports.smushit = function(inputs, settings){
 			console.log("[smushit] " + msg);
 		}
 	};
-	
-	
 	
 	var files = [];
 	inputs.forEach(function(item){
@@ -92,10 +85,7 @@ exports.smushit = function(inputs, settings){
 		}
 	});
 
-	if(files.length == 0){
-		console.log("please specify image(s) need to smushit!");
-		return;
-	};
+	
 
 	var finished = 0,
 		reports = {
@@ -104,33 +94,56 @@ exports.smushit = function(inputs, settings){
 			ok: 0,
 			items: []
 		},
-		onItemFinished = function(){
+		onItemFinished = function(error, item, response){
+			if(settings.onItemComplete){
+				settings.onItemComplete(error, item, response);
+			}
 			if(++reports.finished >= files.length){
-				console.log("smushit completed: total " + reports.total + " | saving " + reports.ok );
+				log("smushit completed: total " + reports.total + ", saving " + reports.ok );
+				if(settings.onComplete){
+					settings.onComplete(reports);
+				}
 			}
 		};
+
+	if(files.length == 0){
+		log("please specify image(s) need to smushit!");
+		if(settings.onComplete){
+			settings.onComplete(null, reports);
+		}
+		return;
+	};
+
 	files.forEach(function(item){
-		log("start smash item: " + item);
+		log("start smash " + item);
+		if(settings.onItemStart){
+			settings.onItemStart(item);
+		}
 		smushit.smushit(item, function(response){
-			log(response);
-			onItemFinished()
+			reports.items.push(response);
 			try{
 				response = JSON.parse(response);
 			}catch(err){
+				log("item: " + item + " response:" + response);
+				onItemFinished(err, item, response);
 				return;
 			}
 			if(response.error){
+				log("item: " + item + " error: " + response.error);
+				onItemFinished(null, item, response);
 				return;
 			}
 			reports.ok += 1;
-			reports.items.push(response);
-			saveBinary(response.dest, item, null, function(){
-				console.log("Fail to save image at: " + item);
+			log("item: " + item + " saving: " + response.percent + "%");
+			saveBinary(response.dest, item, function(e){
+				if(e){
+					log("Fail to save image at: " + item);
+				}
+				onItemFinished(e, item, response);
 			});
-			
 		}, function(error){
 			log(error.message || error.msg);
-			onItemFinished();
+			onItemFinished(error, item);
 		});
 	});
 };
