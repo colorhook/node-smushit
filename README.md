@@ -29,11 +29,21 @@ smushit file1 file2 file3 -R
 smushit image-file-name -o new-file-name
 
 
-/* change the default service.
+/**
+ * change the default service.
  * by default, `node-smushit` use the !Yahoo smushi.it service, you can create your owne smush service.
  * If you are in China, you will know how important to create your own smush.it service. 
  * FUCK THE GFW & POOR NETWORK SPEED.
  */
+
+// view all config
+smushit -c
+
+//view service endpoint config, indicate the smush.it HTTP service
+smushit -c service
+
+//change the config
+smushit -c service=http://your-own-service-endpoint/
 ```
 
 use it in node
