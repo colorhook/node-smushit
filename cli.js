@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
 var smushit = require('./smushit')
-  , util = require('util');
+  , util = require('util')
+  , Persist = require('./lib/persist').Persist
+  , persist = new Persist(__dirname + '/persist.json');
 
 var responses = {
 	error: function (message) {
@@ -23,6 +25,9 @@ var responses = {
 			'',
 			' Traversing:',
 			'  -R, --recursive	scan directories recursively',
+			'',
+			' Output:',
+			'  -o, --output		the path to save',
 			'',
 			' Other:',
 			'  -h, --help		print this help page',
@@ -47,7 +52,7 @@ var responses = {
 		
 	},
 	version: function () {
-		util.puts('smushit v0.1.0');
+		util.puts('smushit v0.3.0');
 	}
 };
 
@@ -61,17 +66,45 @@ if (argv.help || argv.h) {
 	respond('help');
 } else if (argv.version) {
 	respond('version');
-} else if (argv._.length) {
+} else if (argv.c || argv.config){
+	var s = argv.c || argv.config;
+	
+	if(s === true){
+		persist.each(function(key, value){
+			console.log(' smushit config: %s = %s ', key, value);
+		});
+		return;
+	}
+	s = s.split('=');
+	var	key = s[0],
+		value = s[1];
+	
+	if(value == undefined){
+		console.log(' smushit config: %s = %s ', key, persist.getItem(key));
+	}else if(value === ''){
+		persist.removeItem(key);
+		console.log(' smushit delete config key: %s', key);
+	}else{
+		persist.setItem(key, value);
+		console.log(' smushit config: %s = %s ', key, persist.getItem(key));
+	}
+}else if(argv._.length) {
 	var settings = {};
 
 	if (argv.R || argv.recursive) {
 		settings.recursive = true;
 	}
 
-	if (argv.v | argv.verbose) {
+	if (argv.v || argv.verbose) {
 		settings.verbose = true;
 	}
 
+	if(argv.o || argv.output){
+		settings.output = argv.o || argv.output;
+	}
+
+	settings.service = persist.getItem('service');
+	
 	smushit.smushit(argv._, settings);
 
 } else {

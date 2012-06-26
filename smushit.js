@@ -135,7 +135,8 @@ exports.smushit = function(inputs, settings){
 			}
 			reports.ok += 1;
 			log("item: " + item + " saving: " + response.percent + "%");
-			saveBinary(response.dest, item, function(e){
+			
+			saveBinary(response.dest, settings.output || item, function(e){
 				if(e){
 					log("Fail to save image at: " + item);
 				}
@@ -144,6 +145,6 @@ exports.smushit = function(inputs, settings){
 		}, function(error){
 			log(error.message || error.msg);
 			onItemFinished(error, item);
-		});
+		}, settings.service);
 	});
 };

@@ -1,6 +1,6 @@
 {
   "name": "node-smushit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "colorhook <colorhook@gmail.com>",
 	
   "repository": {
@@ -9,6 +9,9 @@
   },
   "dependencies": {
 	"optimist": ">= 0.2.6"
+  },
+  "devDependencies": {
+    "nodeunit": "~>0.6.4"
   },
   "keywords": ["image", "compressor", "compression"],
   "directories" : { "lib" : "./lib" },
