@@ -58,7 +58,7 @@ exports.smushit = function(inputs, settings){
 	
 	var files = [];
 	inputs.forEach(function(item){
-		if(!path.existsSync(item)){
+		if(!fs.existsSync(item)){
 			log("no such file or directory: " + item);
 			return;
 		}
