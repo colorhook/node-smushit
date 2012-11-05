@@ -79,6 +79,9 @@ smushit.smushit('images-folder-path', {
 
 Changelog
 ------------
+> v0.4.0
+* change path.existsSync to fs.existsSync
+
 > v0.3.0
 * add custom smushit serivce feature
 * add global service config for CLI
