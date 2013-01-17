@@ -79,6 +79,9 @@ smushit.smushit('images-folder-path', {
 
 Changelog
 ------------
+> v0.5.0
+* change the cli.js file using unix format for resolve the issue #4
+
 > v0.4.0
 * change path.existsSync to fs.existsSync
 
