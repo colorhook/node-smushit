@@ -79,8 +79,11 @@ smushit.smushit('images-folder-path', {
 
 Changelog
 ------------
+> v0.5.1
+* modify the lib/smushit.js, change the regexp `/.+\//` -> `/.+[\/\\]/` bugfix: wrong filename writed to the request body under Windows. 
+
 > v0.5.0
-* change the cli.js file using unix format for resolve the issue #4
+* modify the cli.js file to unix format for resolving issue #4
 
 > v0.4.0
 * change path.existsSync to fs.existsSync
